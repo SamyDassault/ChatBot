@@ -1,0 +1,24 @@
+:root{
+  --bg:#f7f8fc; --card:#fff; --text:#1f2937; --muted:#6b7280;
+  --accent:#b3c7ff; --accent2:#ffd6e7; --accent3:#d8ffe3;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:linear-gradient(135deg,var(--bg),#eef2ff);color:var(--text)}
+.app{max-width:960px;margin:24px auto;padding:16px}
+header{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:20px;padding:18px;box-shadow:0 8px 28px rgba(0,0,0,.06)}
+.brand{display:flex;gap:14px;align-items:center}
+.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#111827;font-weight:800;box-shadow:0 8px 20px rgba(165,180,252,.35)}
+.titles h1{margin:0;font-size:20px}
+.titles p{margin:0;color:var(--muted)}
+#chat{margin:18px 0;display:flex;flex-direction:column;gap:12px}
+.bubble .bubble-inner{display:inline-block;padding:14px 16px;border-radius:18px;background:var(--card);box-shadow:0 12px 28px rgba(0,0,0,.06)}
+.bubble.user .bubble-inner{border-top-right-radius:6px;background:linear-gradient(135deg,var(--accent3),#fff)}
+.bubble.assistant .bubble-inner{border-top-left-radius:6px;background:linear-gradient(135deg,#fff,var(--accent))}
+#composer{display:flex;gap:10px;background:var(--card);border-radius:16px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.06);position:sticky;bottom:10px}
+#composer input{flex:1;border:0;outline:0;font-size:16px;padding:14px 16px;background:#f5f7ff;border-radius:12px}
+#composer button{border:0;padding:12px 16px;font-weight:600;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#111827;cursor:pointer}
+.answer-box{display:flex;align-items:center;gap:10px;margin-top:6px}
+.answer{font-family:ui-monospace,Consolas,monospace;background:#0b1020;color:#dafffb;padding:12px 14px;border-radius:12px;white-space:pre-wrap}
+.copy{border:0;padding:8px 10px;border-radius:10px;cursor:pointer;background:#e5ecff;color:#333}
+.tip{color:var(--muted);font-size:13px;margin-top:8px}
+.meta-pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#374151;margin:0 6px 6px 0;font-size:12px}

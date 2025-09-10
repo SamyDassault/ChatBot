@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SGI Filter Chatbot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">SGI</div>
+        <div class="titles">
+          <h1>Assistant SGI</h1>
+          <p>Transforme une question en filtre SGI valide.</p>
+        </div>
+      </div>
+      <div class="meta" id="meta"></div>
+    </header>
+
+    <main id="chat">
+      <div class="bubble assistant">
+        <div class="bubble-inner">
+          👋 Pose ta question en langage naturel (ex: "BMW essence entre 2018 et 2021, moins de 30 000€").
+          <div class="tip">Réponse attendue : lignes SGI SEULEMENT.</div>
+        </div>
+      </div>
+    </main>
+
+    <form id="composer">
+      <input id="question" type="text" placeholder="Ta question…"/>
+      <button type="submit">Générer SGI</button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
