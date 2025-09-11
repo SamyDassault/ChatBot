@@ -1,8 +1,16 @@
+// frontend/js/app.js
+// ========================================================
+// Assistant SGI - Frontend
+// - Backend: FastAPI exposé via ngrok (HTTPS)
+// - Bypass écran d'avertissement ngrok via header
+// - Push auto du filtre dans 3DEXPERIENCE (sgi.filter)
+// ========================================================
+
 // ===================== CONFIG BACKEND =====================
-// URL par défaut (ton tunnel ngrok actuel) — change-la si ngrok en génère une nouvelle
+// URL par défaut (ton tunnel ngrok actuel) — remplace-la si ngrok change
 const DEFAULT_BACKEND = "https://c85bdac23fa4.ngrok-free.app";
 
-// Permet d'override l'URL backend via ?api=https://xxxx  (pratique pour tester)
+// Permet d'override l'URL backend via ?api=https://xxxxx (pratique pour tester)
 function getApiBase() {
   try {
     const url = new URL(window.location.href);
@@ -14,12 +22,17 @@ function getApiBase() {
 
 const API_BASE = getApiBase();
 const API = (path) => `${API_BASE}${path.startsWith('/') ? path : `/${path}`}`;
-
+console.log("[SGI] API_BASE =", API_BASE);
 
 // ===================== FETCH HELPER =====================
-// helper fetch JSON (tolère les erreurs non-JSON)
-async function jfetch(url, opts) {
-  const r = await fetch(url, opts);
+// Ajoute automatiquement le header pour bypass l’écran d’avertissement ngrok
+async function jfetch(url, opts = {}) {
+  const headers = {
+    "ngrok-skip-browser-warning": "1",
+    ...(opts.headers || {})
+  };
+  const r = await fetch(url, { ...opts, headers, mode: "cors", credentials: "omit" });
+
   let data;
   try {
     data = await r.json();
@@ -33,7 +46,6 @@ async function jfetch(url, opts) {
   }
   return data;
 }
-
 
 // ===================== METADATA (optionnel) =====================
 async function loadMeta() {
@@ -59,7 +71,6 @@ async function loadMeta() {
   }
 }
 loadMeta();
-
 
 // ===================== CHAT UI =====================
 const chat = document.getElementById("chat");
@@ -105,7 +116,7 @@ function applyToDashboard(sgiText) {
       target: "3DEXPERIENCE",
       type: "dashboard-parameter",
       action: "set",
-      name: "sgi.filter",   // doit correspondre au mapping du widget DP
+      name: "sgi_filter",
       value: sgiText
     },
     "*"
@@ -125,18 +136,15 @@ document.getElementById("composer").addEventListener("submit", async (e) => {
   try {
     const data = await jfetch(API("/chat"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache"
-      },
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" },
       body: JSON.stringify({ question: text })
     });
 
-    // On attend "sgi" (conforme à app.py corrigé). Fallback sur "answer" si besoin.
+    // Le backend renvoie "sgi" (fallback "answer" si jamais)
     const sgi = data.sgi ?? data.answer ?? "";
     addBubble("assistant", sgi || "(vide)", true);
 
-    // 🚀 Pousse direct la réponse dans le dashboard → met à jour la Data Perspective
+    // 🚀 push auto dans la Data Perspective via dashboard param
     applyToDashboard(sgi);
 
   } catch (e2) {
@@ -144,10 +152,10 @@ document.getElementById("composer").addEventListener("submit", async (e) => {
   }
 });
 
-// (optionnel) écoute la confirmation du dashboard
+// (optionnel) log le retour du dashboard
 window.addEventListener("message", (e) => {
   const d = e.data || {};
   if (d.type === "dashboard-parameter" && d.name === "sgi.filter") {
-    console.log("✔ Filtre appliqué dans le dashboard:", d.value);
+    console.log("✔ Filtre appliqué:", d.value);
   }
 });
